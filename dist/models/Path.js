@@ -10,10 +10,16 @@ const PathSchema = new mongoose_1.Schema({
         {
             title: {
                 type: String,
-                required: true,
+                // required: true,
             },
             description: String
         }
+    ],
+    resources: [
+        {
+            type: mongoose_1.Schema.Types.ObjectId,
+            ref: 'Resource'
+        }
     ]
 });
-exports.default = mongoose_1.model('Path', PathSchema);
+exports.default = PathSchema;

@@ -1,12 +1,13 @@
 import { Request, Response } from 'express';
-import { Path } from '../models';
+import { PathModel, ResourceModel } from '../models';
+import { Path, Resource } from '../models/types';
 import Log from '../utils/logger';
 
 export class PathController {
     
     public async getAllPaths(req: Request, res: Response) {
         try {
-            const paths:object[] = await Path.find({});
+            const paths:object[] = await PathModel.find({});
 
             return res.status(200).json({
                 count: paths.length,
@@ -22,7 +23,29 @@ export class PathController {
 
     public async addNewPath(req: Request, res: Response) {
         try {
-            const newPath: typeof Path = await Path.create(req.body);
+            const resources: Array<Resource> = req.body.resources;
+            let resourceIDs: Array<string> = [];
+
+            if (resources && resources.length > 0) {
+               
+                let newResource: Resource;
+
+                for (newResource of resources) {
+                    console.log(newResource);
+                    const existingResource = await ResourceModel.findOne({ 'resourceUrl': newResource.resourceUrl });
+
+                    if (existingResource) {
+                        resourceIDs.push(existingResource._id);
+                        continue;
+                    }
+
+                    let createdResource: Resource = await ResourceModel.create(newResource);
+                    resourceIDs.push(createdResource._id);
+                }
+            }
+
+            req.body.resources = resourceIDs;
+            const newPath: Path = await PathModel.create(req.body);
 
             return res.status(201).json({
                 data: newPath
@@ -37,7 +60,7 @@ export class PathController {
 
     public async editPath(req: Request, res: Response) {
         try {
-            let path = await Path.findById( req.params.id );
+            let path: any = await PathModel.findById( req.params.id );
 
             if (!path) {
                 Log.warn(`No resource with id '${req.params.id}'`);
@@ -62,7 +85,7 @@ export class PathController {
 
     public async deletePath(req: Request, res: Response) {
         try {
-            const path = await Path.findById(req.params.id);
+            const path: any = await PathModel.findById(req.params.id);
 
             if (!path) {
                 Log.warn(`No resource with id '${req.params.id}'`);

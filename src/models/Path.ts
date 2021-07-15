@@ -9,11 +9,17 @@ const PathSchema = new Schema({
         {
             title: {
                 type: String,
-                required: true,
+                // required: true,
             },
             description: String
+        }
+    ],
+    resources: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Resource'
         }
     ]
 });
 
-export default model('Path', PathSchema);
+export default PathSchema;

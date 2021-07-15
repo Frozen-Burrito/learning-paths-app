@@ -28,13 +28,10 @@ class App {
         this.router.routes(this.app);
     }
     config() {
-        dotenv_1.default.config();
+        dotenv_1.default.config({ path: './src/.env.development' });
         this.app.use(express_1.default.json());
         this.app.use(express_1.default.urlencoded({ extended: false }));
         this.app.use(morganMiddleware_1.default);
-        // if (this.NODE_ENV == "development") {
-        // 	this.app.use(morgan('dev'));
-        // }
     }
     setupMongoDB() {
         return __awaiter(this, void 0, void 0, function* () {

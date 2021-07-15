@@ -19,14 +19,11 @@ class App {
 	}
 
 	private config(): void {
-		dotenv.config({ path: './.env.development'});
+		dotenv.config({ path: './src/.env.development'});
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: false }));
 
 		this.app.use(morganMiddleware);
-		// if (this.NODE_ENV == "development") {
-		// 	this.app.use(morgan('dev'));
-		// }
 	}
 
 	private async setupMongoDB(): Promise<void> {

@@ -8,4 +8,4 @@ const ResourceSchema = new Schema({
     resourceUrl: String,
 });
 
-export default model('Resource', ResourceSchema);
+export default ResourceSchema;
