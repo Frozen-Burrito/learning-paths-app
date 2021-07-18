@@ -10,6 +10,7 @@ export type Step = {
 }
 
 export type Path = {
+    _id: string;
     title: string;
     steps: Array<Step>;
     resources: Array<Resource>;

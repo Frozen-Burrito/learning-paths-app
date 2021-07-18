@@ -4,18 +4,15 @@ import mongoose from 'mongoose';
 import morganMiddleware from './utils/morganMiddleware';
 import Log from './utils/logger';
 
-import { Routes } from './routes';
+import { ApiRouter } from './routes';
 
 class App {
-	private NODE_ENV: string | undefined = process.env.NODE_ENV;
-
 	public app: express.Application = express();
-	public router: Routes = new Routes();
+	public apiRouter: ApiRouter = new ApiRouter();
 	
 	constructor() {
 		this.config();
 		this.setupMongoDB();
-		this.router.routes(this.app);
 	}
 
 	private config(): void {
@@ -24,6 +21,8 @@ class App {
 		this.app.use(express.urlencoded({ extended: false }));
 
 		this.app.use(morganMiddleware);
+		
+		this.app.use('/api', this.apiRouter.router);
 	}
 
 	private async setupMongoDB(): Promise<void> {
