@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { ResourceModel } from '../models';
-import { Resource } from '../models/types';
+import { Resource } from '../../index';
 import Log from '../utils/logger';
 
 export class ResourceController {

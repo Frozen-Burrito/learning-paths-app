@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Icon, Image, Item, Label } from 'semantic-ui-react';
+import { Button, Icon, Item, Label } from 'semantic-ui-react';
 
 export interface ItemData {
     header: string;
@@ -40,7 +40,7 @@ export default function ResourceItem(props: { item: ItemData }) {
                         <Icon name="linkify" />
                         {item.action}
                     </Button>
-                    {/* <Label>Book</Label> */}
+                    { item.labels && item.labels.map(label => <Label>{label}</Label>)}
                 </Item.Extra>
             </Item.Content>
         </Item>

@@ -21,9 +21,10 @@ function HomePage() {
         let item: ItemData = {
             header: path.title,
             author: 'Some User',
-            description: 'Lorem ipsum dolor siq amet blah blah blah blah.',
+            description: path.shortDescription,
             action: 'See Online',
-            itemPage: `/paths/${path._id}`
+            itemPage: `/paths/${path._id}`,
+            labels: path.labels
         }
         return item;
     }

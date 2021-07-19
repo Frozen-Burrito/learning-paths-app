@@ -1,6 +1,9 @@
 import winston from 'winston';
 
-const levels = {
+const ERRORS_FILENAME = 'logs/errors.log';
+const ALL_FILENAME = 'logs/all.log';
+
+const levels: winston.config.AbstractConfigSetLevels = {
     error: 0,
     warn: 1,
     info: 2,
@@ -14,15 +17,15 @@ const getLogLevel = () => {
     return isDev ? 'debug' : 'warn';
 }
 
-const colors = {
-    error: 'red',
-    warn: 'yellow',
-    info: 'white',
-    http: 'blue',
-    debug: 'white',
+enum logColors {
+    error = 'red',
+    warn = 'yellow',
+    info = 'white',
+    http = 'blue',
+    debug = 'white',
 }
 
-winston.addColors(colors);
+winston.addColors(logColors);
 
 const format = winston.format.combine(
     winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
@@ -35,9 +38,9 @@ const format = winston.format.combine(
 const transports = [
     new winston.transports.Console(),
     new winston.transports.File({
-        filename: 'logs/errors.log'
+        filename: ERRORS_FILENAME
     }),
-    new winston.transports.File({ filename: 'logs/all.log' }),
+    new winston.transports.File({ filename: ALL_FILENAME }),
 ];
 
 const Logger = winston.createLogger({

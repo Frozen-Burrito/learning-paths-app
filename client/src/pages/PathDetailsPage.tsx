@@ -10,11 +10,15 @@ import CustomAccordion, { AccordionData } from "../components/customAccordion";
 function PathDetailsPage(props: any) {
 
     const pathId = props.match.params.pathId;
-    const { isLoading, paths, getPaths } = useContext(GlobalContext) as State; 
+    const { isLoading, paths, getPaths, resources, getResources } = useContext(GlobalContext) as State; 
 
     useEffect(() => {
         if (typeof getPaths !== "undefined") {
             getPaths();
+        }
+
+        if (typeof getResources !== "undefined") {
+            getResources();
         }
     }, []);
 
@@ -25,7 +29,6 @@ function PathDetailsPage(props: any) {
     );
 
     let path = paths && paths.filter(item => item._id == pathId).pop();
-    console.log(path);
 
     if (!path) return (
         <Container>
@@ -33,19 +36,44 @@ function PathDetailsPage(props: any) {
         </Container>
     );
 
+    let pathResources: Array<Resource | undefined> = path.resources.map(resource => {
+        return resources.find(item => item._id == resource)
+    });
+
     const stepAccordion = path.steps.map(step => {
         const item: AccordionData = {
+            _id: step._id,
             title: step.title,
             content: step.description,
         };
         return item;
     });
 
-    const resourceAccordion = path.resources.map(resource => {
-        const item: AccordionData = {
-            title: resource.name,
-            content: resource.resourceUrl
+    const stepExp: Array<number> = path.steps.map(step => step.score | 0);
+    const totalPathExp: number = stepExp.reduce((total, current) => total + current);
+
+    const resourceAccordion = pathResources.map(resource => {
+        let item: AccordionData = {
+            _id: '',
+            title: '',
+            content: '',
+            labels: [],
+            links: []
         };
+
+        if (typeof resource !== "undefined") {
+            let res = resource as Resource;
+            item = {
+                _id: res._id,
+                title: res.name,
+                content: res.description,
+                labels: res.labels,
+                links: [res.resourceUrl],
+            } 
+            
+            return item;
+        }
+        
         return item;
     });
 
@@ -60,7 +88,7 @@ function PathDetailsPage(props: any) {
             <Header as="h2">
                 <Header.Content>
                     {path.title}
-                    <Header.Subheader>This is a short description of the learning path</Header.Subheader>
+                    <Header.Subheader>{path.shortDescription}</Header.Subheader>
                 </Header.Content>
             </Header>
 
@@ -78,13 +106,13 @@ function PathDetailsPage(props: any) {
 
             <Divider />
 
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi nobis facere vero mollitia officiis porro deleniti. Neque, inventore illum dolorum nulla soluta necessitatibus rem consequatur quas esse nobis placeat natus!</p>
+            <p>{path.description}</p>
 
             <Header as="h3">
                 <Icon name="compass" />
                 <Header.Content>
                     Steps
-                    <Header.Subheader>Mastery: 0 / 50</Header.Subheader>
+                    <Header.Subheader>Path Experience: {totalPathExp}</Header.Subheader>
                 </Header.Content>
             </Header>
             <CustomAccordion data={stepAccordion}/>

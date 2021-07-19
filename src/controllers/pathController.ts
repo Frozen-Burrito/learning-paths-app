@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import { PathModel, ResourceModel } from '../models';
-import { Path, Resource } from '../models/types';
+import { Path, Resource } from '../../index';
 import Log from '../utils/logger';
 
 export class PathController {
     
     public async getAllPaths(req: Request, res: Response) {
         try {
-            const paths:object[] = await PathModel.find({});
+            const paths:Path[] = await PathModel.find({});
 
             return res.status(200).json({
                 count: paths.length,
@@ -31,7 +31,6 @@ export class PathController {
                 let newResource: Resource;
 
                 for (newResource of resources) {
-                    console.log(newResource);
                     const existingResource = await ResourceModel.findOne({ 'resourceUrl': newResource.resourceUrl });
 
                     if (existingResource) {
@@ -96,7 +95,7 @@ export class PathController {
 
             await path.remove();
 
-            return res.status(200);
+            return res.status(204);
         } catch (error) {
             Log.error(error.message);
             return res.status(500).json({
