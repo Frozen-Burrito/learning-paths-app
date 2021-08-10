@@ -1,14 +1,15 @@
 import { Schema } from 'mongoose';
+import { Path } from '../../index';
 
-const PathSchema = new Schema({
+const PathSchema = new Schema<Path>({
     title: {
         type: String,
-        required: true
+        required: [true, 'The path must have a title']
     },
 
     shortDescription: {
         type: String,
-        required: true
+        required: [true, 'A short description is required']
     },
 
     description: String,
@@ -17,7 +18,7 @@ const PathSchema = new Schema({
         {
             title: {
                 type: String,
-                required: true
+                required: [true, 'Each step must have a title']
             },
             description: String,
             score: Number,

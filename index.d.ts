@@ -26,10 +26,18 @@ export interface Path {
 	shortDescription: string;
 	description: string;
 	steps: Array<Step>;
-	resources: Array<Resource> | Array<string>;
+	resourceIds: Array<string>;
+	resources: Array<Resource>;
 	labels: Array<string>;
-	modifiedAt: Date;
+	modifiedAt: Date | null;
 	createdAt: Date;
 }
 
+export interface User {
+	_id: string;
+	username: string;
+	email: string;
+	password: string;
+	createdAt: Date;
+} 
 /*~ You can declare properties of the module using const, let, or var */

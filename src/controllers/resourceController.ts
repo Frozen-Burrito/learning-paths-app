@@ -23,7 +23,7 @@ export class ResourceController {
 
     public async getResourceById(req: Request, res: Response) {
         try {
-            let resource: Resource = await ResourceModel.findById( req.params.id );
+            let resource = await ResourceModel.findById( req.params.id );
 
             if (!resource) {
                 Log.warn(`No resource with id '${req.params.id}'`);

@@ -1,15 +1,22 @@
 import { Schema } from 'mongoose';
+import { Resource } from '../../index';
 
-const ResourceSchema = new Schema({
+const ResourceSchema = new Schema<Resource>({
     name: {
         type: String,
-        required: true
+        required: [true, 'A name is required for the resource'],
+        maxlength: 100,
     },
     description: {
         type: String,
-        required: true
+        required: [true, 'The resource must have a description'],
+        maxlength: 300,
     },
-    resourceUrl: String,
+    resourceUrl: {
+        type: String,
+        required: [true, 'The resource must have a valid url'],
+        unique: true
+    },
     labels: [],
 
     createdAt: {

@@ -1,6 +1,8 @@
 import { Response, Router } from 'express';
 import { PathController } from '../controllers/pathController';
 import { ResourceController } from '../controllers/resourceController';
+import { UserController } from '../controllers/userController';
+import { verifyAuth } from '../utils/authMiddleware';
 
 export class ApiRouter {
 
@@ -8,6 +10,7 @@ export class ApiRouter {
 
     public pathController: PathController = new PathController();
     public resourceController: ResourceController = new ResourceController();
+    public userController: UserController = new UserController();
 
     public constructor() {
         this.router = Router();
@@ -18,25 +21,30 @@ export class ApiRouter {
         this.router.route('/')
             .get((_, res: Response) => {
                 res.status(200).send({
-                    message: "API version: 0.2.3"
+                    message: "API version: 0.3.0"
                 });
             });
 
         this.router.route('/paths')
             .get(this.pathController.getAllPaths)
-            .post(this.pathController.addNewPath);
+            .post(verifyAuth, this.pathController.addNewPath);
 
         this.router.route('/paths/:id')
-            .put(this.pathController.editPath)
-            .delete(this.pathController.deletePath);
+            .get(this.pathController.getPathById)
+            .put(verifyAuth, this.pathController.editPath)
+            .delete(verifyAuth, this.pathController.deletePath);
 
         this.router.route('/resources')
             .get(this.resourceController.getResources)
-            .post(this.resourceController.addResource);
+            .post(verifyAuth, this.resourceController.addResource);
 
         this.router.route('/resources/:id')
             .get(this.resourceController.getResourceById)
-            .put(this.resourceController.editResource)
-            .delete(this.resourceController.deleteResource);
+            .put(verifyAuth, this.resourceController.editResource)
+            .delete(verifyAuth, this.resourceController.deleteResource);
+
+        this.router.post('/users/signup', this.userController.createUser);
+        this.router.post('/users/login', this.userController.loginUser);
+        this.router.get('/users/logout', this.userController.logout);
     }
 }
